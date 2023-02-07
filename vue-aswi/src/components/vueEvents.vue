@@ -6,7 +6,11 @@
 
 <br>
 <h3>{{count}} </h3>
-<p> <button @click="count+=1">Inc 1</button> <button @click="count+=5">Inc 5</button> <button @click=" count-=1">Dec 1</button> <button @click=" count-=5">Dec 5</button></p>
+<p> <button @click="increment(1,$event)">Inc 1</button> 
+    <button @click="count+=5">Inc 5</button>
+     <button @click=" count-=1">Dec 1</button> 
+     <button @click=" count-=5">Dec 5</button>
+    </p>
 
 
 </main>
@@ -23,6 +27,10 @@ export default {
         nameChange() {
             if (this.name == 'ASWI') this.name = 'DEVELOPER';
             else this.name = 'ASWI';
+        },
+        increment(num, event) {
+            this.count = this.count + num;
+            console.log(event)
         }
     }
 
