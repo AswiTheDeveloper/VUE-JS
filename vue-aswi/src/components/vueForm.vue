@@ -12,7 +12,6 @@
                 <input type="radio" name="gender" value="female" v-model="values.gender">Female
                 <br>
                 <input type="radio" name="gender" value="prefer not to say" v-model="values.gender">prefer not to say
-
             </span>
         </label>
 
@@ -145,6 +144,6 @@ p {
 
 h2+input {
     width: 10rem;
-    border: none;
+
 }
 </style>
