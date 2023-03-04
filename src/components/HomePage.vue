@@ -42,8 +42,14 @@ import vFor from './vFor.vue';
 import vueLoops from './vueLoops.vue';
 export default {
     props: {
-        name: String,
-        age: Number,
+        name: {
+            type: String,
+            default:'Aswi'
+        },
+        age: {
+            type: Number,
+            default:23
+        },
     },
     components: {
         vBind, vFor, vueLoops

@@ -1,12 +1,29 @@
 <template>
   <main>
+    <main class="router">
+      <header>
+        <span>
+          <router-link to="/homePage">Home Page</router-link>
+        </span>
+        <span> <router-link to="/form">FORM</router-link> </span>
+        <span>
+          <router-link to="/jsonPosts">Axios</router-link>
+        </span>
+        <span>
+          <router-link to="/bionicReading">Bionic Reading</router-link>
+        </span>
+        
+      </header>
+      <section class="router-view" >
+        <router-view> </router-view>
+      </section>
+    </main>
     <h1>{{ name }}</h1>
     <h2>{{ username }},{{ password }}</h2>
     <img src="./assets/logo.png" alt="" />
     <HomePage :age="23" name="ASWI" />
     <vueMethods />
     <vueEvents />
-    <vueForm />
     <vOnce />
     <vueWatchers />
     <GreetUser name="aswi" role="Frontend" />
@@ -111,22 +128,25 @@
     </section>
 
     <teleport to="#portal">
-
-      
       <TelePort />
-      <JsonPosts />
       <MainBlock />
-      
-      <ClickCounter/>
-      <CompositionAPI/>
-<AnimationsVue/>
+
+      <ClickCounter />
+      <CompositionAPI />
+      <AnimationsVue />
+      <QuestionsPageVue />
+
+      <h1 @click="userInfoPinia">PINIA (click to console data)</h1>
     </teleport>
-
-
-
-
-
-
+    <!-- <form action="">
+      <vueForm />
+      <header>
+        <router-link to="/form">FORM</router-link>
+      </header>
+      <section>
+        <router-view> </router-view>
+      </section>
+    </form> -->
   </main>
 </template>
 
@@ -151,6 +171,11 @@ import MainBlock from "./lifecyle/main.vue";
 import ClickCounter from "./mixins/clickCounter.vue";
 import CompositionAPI from "./compositionAPI/CompositionAPI.vue";
 import AnimationsVue from "./animations/animation.vue";
+import QuestionsPageVue from "./quiz/QuestionsPage.vue";
+import { mapStores, mapWritableState } from "pinia";
+import useUserInfoStore from "./pinia/pinia";
+import bionicReading from "./bionicReading/bionicReading.vue";
+
 export default {
   name: "App",
   data() {
@@ -162,6 +187,25 @@ export default {
       activeTab: "TabA",
       cValue: "",
     };
+  },
+  computed: {
+    ...mapStores(useUserInfoStore),
+    ...mapWritableState(useUserInfoStore, {
+      testName: "namePinia",
+      testAdmin: "isAdmin",
+    }),
+  },
+  methods: {
+    userInfoPinia() {
+      // this.userInfoStore.name = 'ALEX';
+      // console.log(this.userInfoStore.name);
+      console.log(this.userInfoStore.namePinia);
+      // console.log(this.namePinia);
+      console.log(this.testName);
+
+      // console.log('getters from pinia', this.isAdmin);
+      console.log("getters from pinia", this.testAdmin);
+    },
   },
   provide() {
     return {
@@ -192,11 +236,18 @@ export default {
     ClickCounter,
     CompositionAPI,
     AnimationsVue,
+    QuestionsPageVue,
+    bionicReading,
   },
 };
 </script>
 
 <style scoped>
+header{
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
 main {
   display: flex;
   flex-direction: column;
@@ -214,5 +265,18 @@ h2 {
 }
 button {
   margin: 0 1rem;
+}
+.router{
+  width: 100%;
+  height: auto;
+}
+.router>section{
+  width: 99vw;
+}
+.router-view{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
 }
 </style>
