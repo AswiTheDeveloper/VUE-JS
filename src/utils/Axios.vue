@@ -17,10 +17,20 @@
 </template>
 <script>
 import vueButton from "../components/vueComponents/button.vue";
+// import useUserFromDbStore from '../pinia/users';
 import axios from "axios";
 export default {
   name: "JsonPosts",
-  
+  // beforeRouteEnter(to, from, next) {
+  //   const store = useUserFromDbStore();
+  //   if (store.userLoggedIn) {
+  //     next();
+  //   }
+  //   else {
+  //     next({ name: 'signIn' });
+  //   }
+    
+  // },
   data() {
     return {
       posts: [],

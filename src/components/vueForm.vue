@@ -1,6 +1,7 @@
 <template>
+<main>
   <vee-form action="" :validation-schema="schema" @submit="submitForm">
-    <h2>Form Controls in Vue Js</h2>
+    <h3>Vue Js Vee-Validate SignUp With Firebase</h3>
     <span :style="finalMsg" ref="finalMessage"></span>
     <label for="name">Name</label>
     <vee-field
@@ -150,17 +151,24 @@
       check if you want more updates..!</label
     >
     <ErrorMessage name="updates" class="error" />
-    <button>save</button>
+    <button>SignUp</button>
   </vee-form>
+
   <p>{{ JSON.stringify(values, null, 2) }}</p>
 
   <h2>alert on key up only on Enter button</h2>
   <input type="text" @keyup.enter="toAlert" />
+  <vueFormRegister />
+
+</main>
 </template>
 
 <script>
 import { ErrorMessage } from "vee-validate";
-import { auth ,userCollection} from "../firebase/firebase";
+import { mapWritableState, mapActions } from "pinia";
+import useUserFromDbStore from "@/pinia/users";
+import useUserInfoStore from "@/pinia/pinia";
+// import vueFormRegister from "./vueFormRegister.vue";
 
 export default {
   name: "vueForm",
@@ -192,40 +200,26 @@ export default {
       finalMsg: {},
     };
   },
+  computed: {
+    ...mapWritableState(useUserFromDbStore, ["userLoggedIn", "userData"]),
+  },
   methods: {
+    ...mapActions(useUserInfoStore, {
+      registerUser: "register",
+    }),
     async submitForm(value) {
       // e.preventDefault();
       let userCred = null;
       try {
-        userCred = await auth.createUserWithEmailAndPassword(
-          value.email,
-          value.password
-        );
+        this.registerUser(value);
       } catch (error) {
         console.log(error);
         this.finalMsg = { backgroundColor: "red", color: "white" };
         this.$refs.finalMessage.innerText = "something went wrong";
         return;
       }
-
-      try {
-       const user= await userCollection.add({
-          name: value.name,
-          age: value.age,
-          country: value.selectCountry,
-          email: value.email,
-       });
-        console.log({user});
-      }
-      catch (error) {
-        this.finalMsg = { backgroundColor: "red", color: "white" };
-        this.$refs.finalMessage.innerText = "something went wrong";
-        console.log(error)
-        return;
-        
-      }
-
-
+      this.userData = this.values;
+      this.userLoggedIn = true;
       this.finalMsg = { backgroundColor: "lightgreen", color: "white" };
       this.$refs.finalMessage.innerText = "form submitted successfully";
       console.log(userCred);
@@ -236,7 +230,7 @@ export default {
       alert("Hello...");
     },
   },
-  components: { ErrorMessage },
+  components: { ErrorMessage,},
 };
 </script>
 
@@ -300,6 +294,7 @@ form {
   background-color: white;
   padding: 1rem 2rem;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  margin: 1rem 0;
 }
 .error {
   color: red;

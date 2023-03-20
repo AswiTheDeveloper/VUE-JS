@@ -1,15 +1,39 @@
 <template>
   <main>
     <h1>Bionic Reading</h1>
-    <p contenteditable="true" ref="textCopied" @click="pasteText"></p>
+    <p contenteditable="true" ref="textCopied" @click="pasteText">
+      Once upon a time, in a desert far away, there was a rose who was so proud
+      of her beautiful looks. Her only complaint was growing next to an ugly
+      cactus. Every day, the beautiful rose would insult and mock the cactus on
+      his looks, all while the cactus remained quiet. All the other plants
+      nearby tried to make the rose see sense, but she was too swayed by her own
+      looks. One scorching summer, the desert became dry, and there was no water
+      left for the plants. The rose quickly began to wilt. Her beautiful petals
+      dried up, losing their lush color. Looking to the cactus, she saw a
+      sparrow dip his beak into the cactus to drink some water. Though ashamed,
+      the rose asked the cactus if she could have some water. The kind cactus
+      readily agreed, helping them both through the tough summer, as friends.
+    </p>
     <button @click="getBionic">Read</button>
     <section ref="sectionRef" v-html="text" class="section"></section>
   </main>
 </template>
 
 <script>
+// import useUserFromDbStore from '../pinia/users';
 export default {
   name: "bionicReading",
+  // beforeRouteEnter(to, from, next) {
+  //   const store = useUserFromDbStore();
+  //   if (store.userLoggedIn) {
+  //     next();
+  //   }
+  //   else {
+  //     next({ name: 'signIn' });
+  //   }
+
+  // }
+
   data() {
     return {
       text: "",
@@ -29,7 +53,7 @@ export default {
         let temp = e.slice(0, length + 1);
         temp = "<strong>" + temp + "</strong>" + e.slice(length + 1) + " ";
         this.text = this.text + temp;
-          this.$refs.sectionRef.innerText = this.text;
+        this.$refs.sectionRef.innerText = this.text;
       });
     },
     pasteText() {

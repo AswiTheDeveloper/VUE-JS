@@ -5,16 +5,24 @@
         <span>
           <router-link to="/homePage">Home Page</router-link>
         </span>
-        <span> <router-link to="/form">FORM</router-link> </span>
-        <span>
-          <router-link to="/jsonPosts">Axios</router-link>
-        </span>
         <span>
           <router-link to="/bionicReading">Bionic Reading</router-link>
         </span>
-        
+        <span>
+          <router-link to="/storage">Fire Storage</router-link>
+        </span>
+        <span>
+          <router-link to="/jsonPosts">Axios</router-link>
+        </span>
+       
+        <span>
+           <router-link to="/signUp">SignUp</router-link> 
+          </span>
+        <span>
+          <router-link to="/signIn">SignIn</router-link> </span>
+        <span class="logIn" @click="printLog">{{ logged }}</span>
       </header>
-      <section class="router-view" >
+      <section class="router-view">
         <router-view> </router-view>
       </section>
     </main>
@@ -172,10 +180,11 @@ import ClickCounter from "./mixins/clickCounter.vue";
 import CompositionAPI from "./compositionAPI/CompositionAPI.vue";
 import AnimationsVue from "./animations/animation.vue";
 import QuestionsPageVue from "./quiz/QuestionsPage.vue";
-import { mapStores, mapWritableState } from "pinia";
+import { mapStores, mapWritableState, mapActions } from "pinia";
 import useUserInfoStore from "./pinia/pinia";
 import bionicReading from "./bionicReading/bionicReading.vue";
-
+import useUserFromDbStore from "@/pinia/users";
+import { auth } from "../src/firebase/firebase";
 export default {
   name: "App",
   data() {
@@ -194,8 +203,18 @@ export default {
       testName: "namePinia",
       testAdmin: "isAdmin",
     }),
+    ...mapWritableState(useUserFromDbStore, ["userLoggedIn"]),
+    logged() {
+      return this.userLoggedIn ? "Log Out" : "Log In";
+    },
+  },
+  created() {
+    if (auth.currentUser) {
+      this.userLoggedIn = true;
+    }
   },
   methods: {
+    ...mapActions(useUserInfoStore, ["signOut"]),
     userInfoPinia() {
       // this.userInfoStore.name = 'ALEX';
       // console.log(this.userInfoStore.name);
@@ -206,7 +225,20 @@ export default {
       // console.log('getters from pinia', this.isAdmin);
       console.log("getters from pinia", this.testAdmin);
     },
+    printLog() {
+      if (this.userLoggedIn) {
+        this.signOut();
+        this.userLoggedIn = false;
+        console.log("hey you are not logged in");
+      } else {
+        console.log("your are not logged in");
+      }
+      this.$router.push({ name: 'signIn' });
+      console.log(this.$route);
+
+    },
   },
+
   provide() {
     return {
       user: this.username,
@@ -243,10 +275,11 @@ export default {
 </script>
 
 <style scoped>
-header{
+header {
   display: flex;
   gap: 1rem;
   padding: 1rem;
+  align-items: center;
 }
 main {
   display: flex;
@@ -266,17 +299,22 @@ h2 {
 button {
   margin: 0 1rem;
 }
-.router{
+.router {
   width: 100%;
   height: auto;
 }
-.router>section{
+.router > section {
   width: 99vw;
 }
-.router-view{
+.router-view {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+}
+.logIn {
+  background-color: red;
+  padding: 0.5rem;
+  color: white;
+  font-weight: bold;
 }
 </style>
